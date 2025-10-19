@@ -1,0 +1,64 @@
+[
+  {
+    "_id": "5a7b759555429958ee1f5e3c",
+    "question": "Which magazine was started first Arthur's Magazine or First for Women?",
+    "answer": "Arthur's Magazine",
+    "type": "comparison",
+    "level": "medium",
+    "supporting_facts": [
+      [
+        "Arthur's Magazine",
+        0,
+        "Arthur's Magazine was an American literary magazine published in Philadelphia in the mid-19th century."
+      ],
+      [
+        "First for Women",
+        0,
+        "First for Women is a woman's magazine published by Bauer Media Group in the USA."
+      ]
+    ],
+    "context": [
+      [
+        "Arthur's Magazine",
+        0,
+        "Arthur's Magazine was an American literary magazine published in Philadelphia in the mid-19th century."
+      ],
+      [
+        "First for Women",
+        0,
+        "First for Women is a woman's magazine published by Bauer Media Group in the USA."
+      ]
+    ]
+  },
+  {
+    "_id": "5a7b759555429958ee1f5e3d",
+    "question": "What is the population of the city where the University of Notre Dame is located?",
+    "answer": "101,168",
+    "type": "bridge",
+    "level": "hard",
+    "supporting_facts": [
+      [
+        "University of Notre Dame",
+        0,
+        "The University of Notre Dame is a private Catholic research university located in Notre Dame, Indiana."
+      ],
+      [
+        "Notre Dame, Indiana",
+        0,
+        "Notre Dame is a census-designated place (CDP) in St. Joseph County, Indiana, United States, in the Michiana region of Northern Indiana."
+      ]
+    ],
+    "context": [
+      [
+        "University of Notre Dame",
+        0,
+        "The University of Notre Dame is a private Catholic research university located in Notre Dame, Indiana."
+      ],
+      [
+        "Notre Dame, Indiana",
+        0,
+        "Notre Dame is a census-designated place (CDP) in St. Joseph County, Indiana, United States, in the Michiana region of Northern Indiana."
+      ]
+    ]
+  }
+]
