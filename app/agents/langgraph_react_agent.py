@@ -8,7 +8,9 @@ import os
 
 # Import our custom tools
 from app.tools.calculator import evaluate_expression
-from app.tools.web_search import web_search
+from app.tools.web_search_content import search_and_fetch_content, fetch_web_content
+from app.tools.file_reader import read_local_file
+from app.tools.reddit_search import search_reddit
 from app.llm.bedrock_llm import BedrockChatModel, create_bedrock_llm
 
 
@@ -27,25 +29,68 @@ def calculator(expression: str) -> str:
 
 
 @tool
-def search_web(query: str, max_results: int = 5) -> str:
-    """Search the web for information.
-    
+def search_web_with_content(query: str, max_results: int = 3, content_per_page: int = 3000) -> str:
+    """Search the web and get actual content from top results.
+
+    This tool searches the web and automatically fetches the actual text content
+    from the top search results, providing you with the information you need
+    without having to make separate fetch requests.
+
     Args:
         query: The search query
-        max_results: Maximum number of results to return (default: 5)
-    
+        max_results: Maximum number of search results to fetch content from (default: 3)
+        content_per_page: Maximum characters to fetch per webpage (default: 3000)
+
     Returns:
-        A formatted string with search results
+        Formatted string with search results and their actual webpage content
     """
-    results = web_search(query, max_results)
-    if not results:
-        return "No search results found."
-    
-    formatted_results = []
-    for i, result in enumerate(results, 1):
-        formatted_results.append(f"{i}. {result['title']}\n   URL: {result['url']}")
-    
-    return "\n\n".join(formatted_results)
+    return search_and_fetch_content(query, max_results, content_per_page)
+
+@tool
+def fetch_web_page(url: str, max_chars: int = 5000) -> str:
+    """Fetch content from a web page.
+
+    Args:
+        url: The URL of the web page to fetch
+        max_chars: Maximum number of characters to return (default: 5000)
+
+    Returns:
+        The text content of the web page or an error message
+    """
+    return fetch_web_content(url, max_chars)
+
+@tool
+def read_file(file_path: str, max_chars: int = 10000) -> str:
+    """Read content from a local file on the system.
+
+    Use this tool to read text files, code files, or any text-based documents.
+
+    Args:
+        file_path: Path to the file to read (absolute or relative path)
+        max_chars: Maximum number of characters to return (default: 10000)
+
+    Returns:
+        The content of the file or an error message if the file cannot be read
+    """
+    return read_local_file(file_path, max_chars)
+
+
+@tool
+def reddit_search(query: str, subreddit: Optional[str] = None, max_results: int = 5, sort: str = "relevance") -> str:
+    """Search Reddit posts and get actual post content.
+
+    Use this to find discussions, opinions, and information from Reddit communities.
+
+    Args:
+        query: The search query
+        subreddit: Optional subreddit name to search within (e.g., "python", "programming")
+        max_results: Maximum number of results to return (default: 5)
+        sort: Sort method - "relevance", "hot", "top", "new", "comments" (default: "relevance")
+
+    Returns:
+        Formatted string with Reddit posts including titles, scores, authors, and content
+    """
+    return search_reddit(query, subreddit, max_results, sort)
 
 
 class LangGraphReActAgent:
@@ -88,7 +133,7 @@ class LangGraphReActAgent:
         # Create the ReAct agent with our tools
         self.agent = create_react_agent(
             self.model,
-            [calculator, search_web],
+            [calculator, search_web_with_content, read_file, reddit_search, fetch_web_page],
             checkpointer=self.checkpointer,
         )
     
