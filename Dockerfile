@@ -11,7 +11,13 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app ./app
 
-EXPOSE 8000
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Default environment variables (can be overridden)
+ENV USER_ID=default \
+    FLASK_PORT=5001 \
+    AGENT_PROVIDER=bedrock \
+    AGENT_MODEL=claude-3-sonnet
+
+EXPOSE 5001
+CMD ["python", "-m", "app.api.agent_service"]
 
 

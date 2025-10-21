@@ -1,0 +1,8 @@
+I want to achieve user-level isolation for my agents.
+For every user, the central dispatcher first recognzies do we have a container for that user_id.
+If yes, the central dispatcher sends this request to that container to call the ReAct agent.
+If no, start a container to run that request.
+Use Flask instead of FastAPI to handle API calls.
+The central dispatcher should perform heartbeat monitoring on all containers. If that container hasn't been active or hasn't been used for 6 hours, retrieve that container.
+There can be at most 5 containers in use, replace one that is least recently used if we need to start a new container.
+You may use Redis as means to communicate and store other information needed.

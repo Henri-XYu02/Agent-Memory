@@ -31,3 +31,7 @@ tqdm==4.66.1
 boto3==1.34.0
 botocore==1.34.0
 
+# Flask and Docker management
+Flask==3.0.0
+redis==5.0.1
+docker==7.0.0

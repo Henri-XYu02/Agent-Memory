@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # Redis for container metadata and coordination
+  redis:
+    image: redis:7-alpine
+    container_name: agent-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - agent-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Central dispatcher service
+  dispatcher:
+    build:
+      context: .
+      dockerfile: Dockerfile.dispatcher
+    container_name: agent-dispatcher
+    ports:
+      - "5000:5000"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - MAX_CONTAINERS=5
+      - INACTIVE_HOURS=6
+      - AGENT_IMAGE=agent-memory:latest
+      - DISPATCHER_PORT=5000
+    volumes:
+      # Mount Docker socket to allow container management
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - agent-network
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+networks:
+  agent-network:
+    name: agent-network
+    driver: bridge
+
+volumes:
+  redis-data:
+    name: agent-redis-data
